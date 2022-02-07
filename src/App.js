@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Header from './components/Header';
+import Contacts from './components/Contacts';
+import AddContact from './components/AddContact';
 
-function App() {
+const App =() => {
+const[showAddContact, setShowAddContact] = useState(false)
+const [contacts, setContacts] = useState([
+  {
+    id: 0,
+    name: 'John Doe',
+    email: 'johnd@gmail.com',
+    phone: '818-717-1616',
+    address: '22 N Street Drive',
+    city: 'Bella Vista',
+    state: 'Arkansas',
+    zip: 72715
+  }
+])
+
+const addContact = (contact) => {
+  const id = Math.floor(Math.random() * 1000) + 1;
+  const newContact = {id, ...contact}
+  setContacts([...contacts, newContact])
+}
+
+const deleteContact = (id) => {
+  setContacts(contacts.filter((contact) => contact.id !== id));
+}
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Header onAdd={() => setShowAddContact(!showAddContact)} showAdd={showAddContact} />
+      {showAddContact && <AddContact onAdd={addContact} />}
+      {contacts.length > 0 ? 
+        <Contacts 
+          contacts={contacts} 
+          onDelete={deleteContact} /> 
+        : 'No Contacts To Show'}
     </div>
   );
 }
