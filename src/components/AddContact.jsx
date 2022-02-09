@@ -1,13 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from 'react-bootstrap'
 
-const AddContact = ({onAdd}) => {
+const AddContact = ({onAdd, onDelete, tab, currentContact, setTab, text}) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState();
+    const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zip, setZip] = useState();
+
+    useEffect(() => {
+        if(tab === 'update') {
+            setName(currentContact.name);
+            setEmail(currentContact.email);
+            setPhone(currentContact.phone);
+            setAddress(currentContact.address);
+            setCity(currentContact.city);
+            setState(currentContact.state);
+            setZip(currentContact.zip);
+            onDelete(currentContact.id);
+        }
+    }, []);
+
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -18,13 +33,7 @@ const AddContact = ({onAdd}) => {
 
         onAdd({name, email, phone, address, city, state, zip})
 
-        setName('')
-        setEmail('')
-        setPhone();
-        setAddress('');
-        setCity('');
-        setState('');
-        setZip();
+        setTab('view');
     }
 
     return(
@@ -50,7 +59,7 @@ const AddContact = ({onAdd}) => {
             <div className="form-control">
                 <label>Phone</label>
                 <input 
-                    type="number"
+                    type="text"
                     placeholder="Add Phone Number"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)} 
@@ -92,9 +101,12 @@ const AddContact = ({onAdd}) => {
                     onChange={(e) => setZip(e.target.value)} 
                 />
             </div>
-            <input type="submit" value='Save Contact' className="btn btn-block"/>
+            <Button className='my-5' variant="primary" type='submit' onClick={(e) => onSubmit(e)}>
+                {text}
+            </Button>
         </form>
     )
 }
+
 
 export default AddContact;

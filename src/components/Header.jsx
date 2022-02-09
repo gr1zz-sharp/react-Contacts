@@ -1,21 +1,21 @@
-import PropTypes from 'prop-types'
-import Button from './Button'
+import { Container, Navbar, Button } from "react-bootstrap";
 
-const Header = ({title, onAdd, showAdd}) => {
+const Header = ({title, onAddClick, tab}) => {
     return(
-        <header className='header'>
-            <h1>{title}</h1>
-            <Button color={showAdd ? 'red' : 'green'} text={showAdd ? 'Close' : 'Add'} onClick={onAdd}/>
-        </header>
+        <Navbar>
+            <Container>
+                <Navbar.Brand href="#home">{title}</Navbar.Brand>
+                <Navbar.Toggle />
+                <Navbar.Collapse className="justify-content-end">
+                    <Navbar.Text>
+                        {tab === 'view' && (
+                            <Button onClick={() => onAddClick('add')}>Add Contact</Button>
+                        )}
+                    </Navbar.Text>
+                </Navbar.Collapse>
+            </Container>
+        </Navbar>
     );
-}
-
-Header.defaultProps = {
-    title: 'Contacts',
-}
-
-Header.propTypes = {
-    title: PropTypes.string.isRequired,
 }
 
 export default Header;

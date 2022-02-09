@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import Header from './components/Header';
 import Contacts from './components/Contacts';
-import AddContact from './components/AddContact';
 
 const App =() => {
-const[showAddContact, setShowAddContact] = useState(false)
+const [tab, setTab] = useState('view');
 const [contacts, setContacts] = useState([
   {
     id: 0,
@@ -17,12 +16,15 @@ const [contacts, setContacts] = useState([
     zip: 72715
   }
 ])
+const [currentContact, setCurrentContact] = useState(null);
 
 const addContact = (contact) => {
   const id = Math.floor(Math.random() * 1000) + 1;
   const newContact = {id, ...contact}
   setContacts([...contacts, newContact])
+  setTab('view');
 }
+
 
 const deleteContact = (id) => {
   setContacts(contacts.filter((contact) => contact.id !== id));
@@ -30,13 +32,16 @@ const deleteContact = (id) => {
 
   return (
     <div className="container">
-      <Header onAdd={() => setShowAddContact(!showAddContact)} showAdd={showAddContact} />
-      {showAddContact && <AddContact onAdd={addContact} />}
-      {contacts.length > 0 ? 
-        <Contacts 
-          contacts={contacts} 
-          onDelete={deleteContact} /> 
-        : 'No Contacts To Show'}
+      <Header title='Contacts' tab={tab} onAddClick={setTab}/>
+      <Contacts 
+        contacts={contacts}
+        setTab={setTab}
+        tab={tab}
+        currentContact={currentContact}
+        setCurrentContact={setCurrentContact}
+        onAdd={addContact}
+        onDelete={deleteContact}
+        />
     </div>
   );
 }
